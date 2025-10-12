@@ -1,0 +1,13 @@
+package com.lukadervisevic.drugsafety;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class DrugsafetyApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
