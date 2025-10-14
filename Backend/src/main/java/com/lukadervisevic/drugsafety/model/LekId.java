@@ -13,6 +13,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class LekId implements Serializable {
+    // Zakljucio sam da je ovo dobitna kombinacija atributa za primarni kljuc, testirajuci povlacenja
+    // objekata sa API-ja u bazu, tako da ova kombinacija vraca sve lekove kao jedinstvene
     private String brojResenjaOStavljanjuLekaUPromet;
     @Column(length = 20)
     private String sifraProizvoda;

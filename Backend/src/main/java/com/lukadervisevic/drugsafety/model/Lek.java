@@ -1,6 +1,8 @@
 package com.lukadervisevic.drugsafety.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lukadervisevic.drugsafety.dto.LekDTO;
@@ -11,33 +13,47 @@ import org.springframework.stereotype.Component;
 @Component
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode
 @ToString
 public class Lek {
     @EmbeddedId
+    @NonNull
     private LekId id;
 
     @Column(length = 500)
+    @NonNull
     private String inn;
 
     @Column(length = 500)
+    @NonNull
     private String oblikIDozaLeka;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
+    @NonNull
     private LocalDate datumResenjaOStavljanjuLekaUPromet;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
+    @NonNull
     private LocalDate datumVazenjaResenja;
 
+    @NonNull
     private String nazivLeka;
+    @NonNull
     private String rezimIzdavanjaLeka;
+    @NonNull
     private String proizvodjac;
+    @NonNull
     private String vrstaLeka;
+    @NonNull
     private String sifraProizvodjacaUSaradnji;
+    @NonNull
     private String oblikSaradnje;
+
+    @OneToMany(mappedBy = "lek",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Pismo> pisma = new ArrayList<>();
 
 
     public void sync(LekDTO lekDTO) {

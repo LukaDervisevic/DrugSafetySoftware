@@ -61,7 +61,7 @@ public class LekService {
 
     }
 
-    @Scheduled(cron = "0 33 12 * * *")
+    @Scheduled(cron = "0 10 2 * * *")
     @Transactional
     public void sync() {
         System.out.println("Method called");
@@ -101,4 +101,8 @@ public class LekService {
         System.out.println("End of method");
     }
 
+    public List<LekDTO> getAllLekovi() {
+        List<Lek> lekovi = repo.findAll();
+
+    }
 }
