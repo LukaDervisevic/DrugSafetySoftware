@@ -22,4 +22,12 @@ public class LekId implements Serializable {
     private String sifraNosiocaDozvole;
     @Column(length = 20)
     private String vrstaResenja;
+    @Column(length = 20)
+    private String atc;
+    @Column(length = 20)
+    private String ean;
+    @Column(length = 20)
+    private String jkl;
+    private String nosilacDozvole;
+
 }

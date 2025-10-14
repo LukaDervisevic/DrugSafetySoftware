@@ -35,10 +35,6 @@ public class Lek {
     private String nazivLeka;
     private String rezimIzdavanjaLeka;
     private String proizvodjac;
-    private String nosilacDozvole;
-    private String atc;
-    private String ean;
-    private String jkl;
     private String vrstaLeka;
     private String sifraProizvodjacaUSaradnji;
     private String oblikSaradnje;
@@ -50,7 +46,11 @@ public class Lek {
                 lekDTO.getSifraProizvoda(),
                 lekDTO.getSifraProizvodjaca(),
                 lekDTO.getSifraNosiocaDozvole(),
-                lekDTO.getVrstaResenja());
+                lekDTO.getVrstaResenja(),
+                lekDTO.getAtc(),
+                lekDTO.getEan(),
+                lekDTO.getInn(),
+                lekDTO.getNosilacDozvole());
         this.nazivLeka = lekDTO.getNazivLeka();
         this.inn = lekDTO.getInn();
         this.rezimIzdavanjaLeka = lekDTO.getRezimIzdavanjaLeka();
@@ -58,10 +58,6 @@ public class Lek {
         this.datumResenjaOStavljanjuLekaUPromet = lekDTO.getDatumResenjaOStavljanjuLekaUPromet();
         this.datumVazenjaResenja = lekDTO.getDatumVazenjaResenja();
         this.proizvodjac = lekDTO.getProizvodjac();
-        this.nosilacDozvole = lekDTO.getNosilacDozvole();
-        this.atc = lekDTO.getAtc();
-        this.ean = lekDTO.getEan();
-        this.jkl = lekDTO.getJkl();
         this.vrstaLeka = lekDTO.getVrstaLeka();
         this.sifraProizvodjacaUSaradnji = lekDTO.getSifraProizvodjacaUSaradnji();
         this.oblikSaradnje = lekDTO.getOblikSaradnje();

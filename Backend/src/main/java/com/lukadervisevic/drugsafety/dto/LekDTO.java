@@ -49,7 +49,11 @@ public class LekDTO {
                 dto.getSifraProizvoda(),
                 dto.getSifraProizvodjaca(),
                 dto.getSifraNosiocaDozvole(),
-                dto.getVrstaResenja()
+                dto.getVrstaResenja(),
+                dto.getAtc(),
+                dto.getEan(),
+                dto.getJkl(),
+                dto.getNosilacDozvole()
         ));
         lek.setNazivLeka(dto.getNazivLeka());
         lek.setInn(dto.getInn());
@@ -58,10 +62,6 @@ public class LekDTO {
         lek.setDatumResenjaOStavljanjuLekaUPromet(dto.getDatumResenjaOStavljanjuLekaUPromet());
         lek.setDatumVazenjaResenja(dto.getDatumVazenjaResenja());
         lek.setProizvodjac(dto.getProizvodjac());
-        lek.setNosilacDozvole(dto.getNosilacDozvole());
-        lek.setAtc(dto.getAtc());
-        lek.setEan(dto.getEan());
-        lek.setJkl(dto.getJkl());
         lek.setVrstaLeka(dto.getVrstaLeka());
         lek.setSifraProizvodjacaUSaradnji(dto.getSifraProizvodjacaUSaradnji());
         lek.setOblikSaradnje(dto.getOblikSaradnje());
@@ -80,10 +80,6 @@ public class LekDTO {
                 Objects.equals(this.datumResenjaOStavljanjuLekaUPromet, lek.getDatumResenjaOStavljanjuLekaUPromet()) &&
                 Objects.equals(this.datumVazenjaResenja, lek.getDatumVazenjaResenja()) &&
                 Objects.equals(this.proizvodjac, lek.getProizvodjac()) &&
-                Objects.equals(this.nosilacDozvole, lek.getNosilacDozvole()) &&
-                Objects.equals(this.atc, lek.getAtc()) &&
-                Objects.equals(this.ean, lek.getEan()) &&
-                Objects.equals(this.jkl, lek.getJkl()) &&
                 Objects.equals(this.vrstaLeka, lek.getVrstaLeka()) &&
                 Objects.equals(this.sifraProizvodjacaUSaradnji, lek.getSifraProizvodjacaUSaradnji()) &&
                 Objects.equals(this.oblikSaradnje, lek.getOblikSaradnje()) &&

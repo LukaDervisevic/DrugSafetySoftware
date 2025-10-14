@@ -35,7 +35,14 @@ public class LekService {
         List<Lek> lekovi = registarDTO.get().getLekovi().stream().map(dto -> {
             Lek lek = new Lek();
             lek.setId(new LekId(dto.getBrojResenjaOStavljanjuLekaUPromet(),
-                    dto.getSifraProizvoda(),dto.getSifraProizvodjaca(),dto.getSifraNosiocaDozvole(),dto.getVrstaResenja()));
+                    dto.getSifraProizvoda(),
+                    dto.getSifraProizvodjaca(),
+                    dto.getSifraNosiocaDozvole(),
+                    dto.getVrstaResenja(),
+                    dto.getAtc(),
+                    dto.getEan(),
+                    dto.getJkl(),
+                    dto.getNosilacDozvole()));
 
             lek.setNazivLeka(dto.getNazivLeka());
             lek.setInn(dto.getInn());
@@ -44,23 +51,17 @@ public class LekService {
             lek.setDatumResenjaOStavljanjuLekaUPromet(dto.getDatumResenjaOStavljanjuLekaUPromet());
             lek.setDatumVazenjaResenja(dto.getDatumVazenjaResenja());
             lek.setProizvodjac(dto.getProizvodjac());
-            lek.setNosilacDozvole(dto.getNosilacDozvole());
-            lek.setAtc(dto.getAtc());
-            lek.setEan(dto.getEan());
-            lek.setJkl(dto.getJkl());
             lek.setVrstaLeka(dto.getVrstaLeka());
             lek.setSifraProizvodjacaUSaradnji(dto.getSifraProizvodjacaUSaradnji());
             lek.setOblikSaradnje(dto.getOblikSaradnje());
 
             return lek;
         }).toList();
-
-
         repo.saveAll(lekovi);
 
     }
 
-    @Scheduled(cron = "0 36 11 * * *")
+    @Scheduled(cron = "0 33 12 * * *")
     @Transactional
     public void sync() {
         System.out.println("Method called");
@@ -79,7 +80,11 @@ public class LekService {
                     lekAPI.getSifraProizvoda(),
                     lekAPI.getSifraProizvodjaca(),
                     lekAPI.getSifraNosiocaDozvole(),
-                    lekAPI.getVrstaResenja()
+                    lekAPI.getVrstaResenja(),
+                    lekAPI.getAtc(),
+                    lekAPI.getEan(),
+                    lekAPI.getJkl(),
+                    lekAPI.getNosilacDozvole()
             );
 
             Lek lekDB = dbLekoviMap.get(lekId);
