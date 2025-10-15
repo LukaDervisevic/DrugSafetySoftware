@@ -28,6 +28,15 @@ body {
   border-radius: 0.5rem; 
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   border: 1px solid #d1d5db;
+  cursor: pointer;
+}
+
+.bordered-btn:hover {
+  filter: brightness(1.1);
+}
+
+.bordered-btn:active {
+  filter: brightness(0.9);
 }
 
 .nunito{
@@ -35,4 +44,26 @@ body {
   font-optical-sizing: auto;
   font-weight: 700;
   font-style: normal;
+}
+
+.search-btn {
+  font-size: small;
+  padding: 10px 30px;
+}
+
+.search-bar {
+  font-family: "Nunito", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+.post-btn {
+  font-size: medium;
+  padding: 5px 20px;
+}
+
+.info-btn {
+  font-size: medium;
+  padding: 5px 10px;
+  margin-top: 5px;
 }
