@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class Pismo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,8 +21,9 @@ public class Pismo {
     private String naslovPisma;
     private String tekstPisma;
     private String dokumentUrl;
+    private boolean deleted;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
             @JoinColumn(name = "atc",referencedColumnName = "atc"),
             @JoinColumn(name = "broj_resenjaostavljanju_lekaupromet", referencedColumnName = "brojResenjaOStavljanjuLekaUPromet"),

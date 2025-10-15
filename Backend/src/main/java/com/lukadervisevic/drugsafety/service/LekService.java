@@ -103,6 +103,6 @@ public class LekService {
 
     public List<LekDTO> getAllLekovi() {
         List<Lek> lekovi = repo.findAll();
-
+        return null;
     }
 }
