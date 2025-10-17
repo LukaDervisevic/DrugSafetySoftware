@@ -1,0 +1,7 @@
+package com.lukadervisevic.drugsafety.util;
+
+public class UserAlreadyExistsException extends RuntimeException {
+    public UserAlreadyExistsException(String message) {
+        super(message);
+    }
+}

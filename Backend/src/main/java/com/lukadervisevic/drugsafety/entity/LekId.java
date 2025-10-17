@@ -1,4 +1,4 @@
-package com.lukadervisevic.drugsafety.model;
+package com.lukadervisevic.drugsafety.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

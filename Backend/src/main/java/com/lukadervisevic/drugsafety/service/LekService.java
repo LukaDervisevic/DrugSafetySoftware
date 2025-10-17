@@ -2,10 +2,11 @@ package com.lukadervisevic.drugsafety.service;
 
 import com.lukadervisevic.drugsafety.dto.LekDTO;
 import com.lukadervisevic.drugsafety.dto.RegistarDTO;
-import com.lukadervisevic.drugsafety.model.Lek;
-import com.lukadervisevic.drugsafety.model.LekId;
+import com.lukadervisevic.drugsafety.entity.Lek;
+import com.lukadervisevic.drugsafety.entity.LekId;
 import com.lukadervisevic.drugsafety.repository.LekRepository;
 import jakarta.transaction.Transactional;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Data
 public class LekService {
 
     @Autowired

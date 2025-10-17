@@ -1,17 +1,15 @@
 package com.lukadervisevic.drugsafety.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.lukadervisevic.drugsafety.model.Lek;
-import com.lukadervisevic.drugsafety.model.LekId;
+import com.lukadervisevic.drugsafety.entity.Lek;
+import com.lukadervisevic.drugsafety.entity.LekId;
 import jakarta.persistence.Column;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
-@Getter
-@Setter
+@Data
 public class LekDTO {
 
     @Column(length = 500)
