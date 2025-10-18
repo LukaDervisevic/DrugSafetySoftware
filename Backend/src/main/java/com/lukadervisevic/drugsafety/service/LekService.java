@@ -46,7 +46,7 @@ public class LekService {
     @Scheduled(cron = "0 10 2 * * *")
     @Transactional
     public void sync() {
-        System.out.println("Method called");
+        System.out.println("Method syncing");
         List<Lek> lekoviDB = repo.findAll();
         String apiUrl = "https://api.alims.gov.rs/RegistarLekovaHumanaMedicinaREST/registarlekovahumanamedicina";
         Optional<RegistarDTO> registarDTO = Optional.ofNullable(restTemplate.getForObject(apiUrl, RegistarDTO.class));
@@ -61,7 +61,7 @@ public class LekService {
             Lek lekDB = dbLekoviMap.get(lekId);
 
             if(lekDB == null) {
-                Lek mappedLek = LekDTO.toEntity(lekAPI);
+                Lek mappedLek = mapper.toEntity(lekAPI);
                 repo.save(mappedLek);
                 log.info("New lek saved {}",mappedLek);
             }else if(!lekAPI.DTOequalsEntity(lekDB)) {
@@ -70,7 +70,7 @@ public class LekService {
                 log.info("Updated lek from {} to {}",lekDB,lekAPI);
             }
         }
-        System.out.println("End of method");
+        System.out.println("End of syncing");
     }
 
     public List<LekDTO> getAllLekovi() {

@@ -43,15 +43,13 @@ public class LekDTO {
     public static Lek toEntity(LekDTO dto) {
         Lek lek = new Lek();
         lek.setId(new LekId(
-                dto.getBrojResenjaOStavljanjuLekaUPromet(),
                 dto.getSifraProizvoda(),
                 dto.getSifraProizvodjaca(),
                 dto.getSifraNosiocaDozvole(),
                 dto.getVrstaResenja(),
                 dto.getAtc(),
                 dto.getEan(),
-                dto.getJkl(),
-                dto.getNosilacDozvole()
+                dto.getJkl()
         ));
         lek.setNazivLeka(dto.getNazivLeka());
         lek.setInn(dto.getInn());
@@ -69,22 +67,28 @@ public class LekDTO {
 
     public boolean DTOequalsEntity(Lek lek) {
         if (lek == null) return false;
-
+        // Jedino je izostavljen brojResenjaOStavljanjUPromet jer on nije bitan za kontekst
+        // kreiranja pisama za data resenja, u bazi postoji vise lekova koji imaju razlicite brojeveResenja
+        // iako oba vaze
         return
-                Objects.equals(this.nazivLeka, lek.getNazivLeka()) &&
-                Objects.equals(this.inn, lek.getInn()) &&
-                Objects.equals(this.rezimIzdavanjaLeka, lek.getRezimIzdavanjaLeka()) &&
-                Objects.equals(this.oblikIDozaLeka, lek.getOblikIDozaLeka()) &&
-                Objects.equals(this.datumResenjaOStavljanjuLekaUPromet, lek.getDatumResenjaOStavljanjuLekaUPromet()) &&
-                Objects.equals(this.datumVazenjaResenja, lek.getDatumVazenjaResenja()) &&
-                Objects.equals(this.proizvodjac, lek.getProizvodjac()) &&
-                Objects.equals(this.vrstaLeka, lek.getVrstaLeka()) &&
-                Objects.equals(this.sifraProizvodjacaUSaradnji, lek.getSifraProizvodjacaUSaradnji()) &&
-                Objects.equals(this.oblikSaradnje, lek.getOblikSaradnje()) &&
                 Objects.equals(this.sifraProizvodjaca, lek.getId().getSifraProizvodjaca()) &&
-                Objects.equals(this.sifraNosiocaDozvole, lek.getId().getSifraNosiocaDozvole()) &&
-                Objects.equals(this.brojResenjaOStavljanjuLekaUPromet, lek.getId().getBrojResenjaOStavljanjuLekaUPromet()) &&
-                Objects.equals(this.sifraProizvoda, lek.getId().getSifraProizvoda());
+                        Objects.equals(this.sifraNosiocaDozvole, lek.getId().getSifraNosiocaDozvole()) &&
+                        Objects.equals(this.vrstaResenja, lek.getId().getVrstaResenja()) &&
+                        Objects.equals(this.sifraProizvoda, lek.getId().getSifraProizvoda()) &&
+                        Objects.equals(this.atc, lek.getId().getAtc()) &&
+                        Objects.equals(this.ean, lek.getId().getEan()) &&
+                        Objects.equals(this.jkl, lek.getId().getJkl()) &&
+                        Objects.equals(this.nazivLeka, lek.getNazivLeka()) &&
+                        Objects.equals(this.inn, lek.getInn()) &&
+                        Objects.equals(this.rezimIzdavanjaLeka, lek.getRezimIzdavanjaLeka()) &&
+                        Objects.equals(this.oblikIDozaLeka, lek.getOblikIDozaLeka()) &&
+                        Objects.equals(this.datumResenjaOStavljanjuLekaUPromet, lek.getDatumResenjaOStavljanjuLekaUPromet()) &&
+                        Objects.equals(this.datumVazenjaResenja, lek.getDatumVazenjaResenja()) &&
+                        Objects.equals(this.proizvodjac, lek.getProizvodjac()) &&
+                        Objects.equals(this.vrstaLeka, lek.getVrstaLeka()) &&
+                        Objects.equals(this.sifraProizvodjacaUSaradnji, lek.getSifraProizvodjacaUSaradnji()) &&
+                        Objects.equals(this.oblikSaradnje, lek.getOblikSaradnje()) &&
+                        Objects.equals(this.nosilacDozvole, lek.getNosilacDozvole()) ;
     }
 
 }

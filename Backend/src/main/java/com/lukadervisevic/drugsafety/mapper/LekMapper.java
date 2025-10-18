@@ -11,7 +11,7 @@ public class LekMapper {
         if (lek == null) return null;
         LekDTO dto = new LekDTO();
 
-        dto.setBrojResenjaOStavljanjuLekaUPromet(lek.getId().getBrojResenjaOStavljanjuLekaUPromet());
+        dto.setBrojResenjaOStavljanjuLekaUPromet(lek.getBrojResenjaOStavljanjuLekaUPromet());
         dto.setSifraProizvoda(lek.getId().getSifraProizvoda());
         dto.setSifraProizvodjaca(lek.getId().getSifraProizvodjaca());
         dto.setSifraNosiocaDozvole(lek.getId().getSifraNosiocaDozvole());
@@ -19,7 +19,7 @@ public class LekMapper {
         dto.setAtc(lek.getId().getAtc());
         dto.setEan(lek.getId().getEan());
         dto.setJkl(lek.getId().getJkl());
-        dto.setNosilacDozvole(lek.getId().getNosilacDozvole());
+        dto.setNosilacDozvole(lek.getNosilacDozvole());
 
         dto.setInn(lek.getInn());
         dto.setOblikIDozaLeka(lek.getOblikIDozaLeka());
@@ -52,13 +52,14 @@ public class LekMapper {
         lek.setVrstaLeka(dto.getVrstaLeka());
         lek.setSifraProizvodjacaUSaradnji(dto.getSifraProizvodjacaUSaradnji());
         lek.setOblikSaradnje(dto.getOblikSaradnje());
+        lek.setBrojResenjaOStavljanjuLekaUPromet(dto.getBrojResenjaOStavljanjuLekaUPromet());
+        lek.setNosilacDozvole(dto.getNosilacDozvole());
         
         return lek;
     }
 
     public LekId getLekId(LekDTO dto) {
         LekId id = new LekId();
-        id.setBrojResenjaOStavljanjuLekaUPromet(dto.getBrojResenjaOStavljanjuLekaUPromet());
         id.setSifraProizvoda(dto.getSifraProizvoda());
         id.setSifraProizvodjaca(dto.getSifraProizvodjaca());
         id.setSifraNosiocaDozvole(dto.getSifraNosiocaDozvole());
@@ -66,7 +67,6 @@ public class LekMapper {
         id.setAtc(dto.getAtc());
         id.setEan(dto.getEan());
         id.setJkl(dto.getJkl());
-        id.setNosilacDozvole(dto.getNosilacDozvole());
         return id;
     }
 }

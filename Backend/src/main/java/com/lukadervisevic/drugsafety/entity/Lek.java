@@ -37,32 +37,41 @@ public class Lek {
 
     @NonNull
     private String nazivLeka;
+
     @NonNull
     private String rezimIzdavanjaLeka;
+
     @NonNull
+    @Column(columnDefinition = "TEXT")
     private String proizvodjac;
+
     @NonNull
     private String vrstaLeka;
+
     @NonNull
     private String sifraProizvodjacaUSaradnji;
+
     @NonNull
     private String oblikSaradnje;
+
+    @NonNull
+    private String nosilacDozvole;
+
+    @NonNull
+    private String brojResenjaOStavljanjuLekaUPromet;
 
     @OneToMany(mappedBy = "lek",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Pismo> pisma = new ArrayList<>();
 
-
     public void sync(LekDTO lekDTO) {
         this.id = new LekId(
-                lekDTO.getBrojResenjaOStavljanjuLekaUPromet(),
                 lekDTO.getSifraProizvoda(),
                 lekDTO.getSifraProizvodjaca(),
                 lekDTO.getSifraNosiocaDozvole(),
                 lekDTO.getVrstaResenja(),
                 lekDTO.getAtc(),
                 lekDTO.getEan(),
-                lekDTO.getInn(),
-                lekDTO.getNosilacDozvole());
+                lekDTO.getJkl());
         this.nazivLeka = lekDTO.getNazivLeka();
         this.inn = lekDTO.getInn();
         this.rezimIzdavanjaLeka = lekDTO.getRezimIzdavanjaLeka();
@@ -73,5 +82,7 @@ public class Lek {
         this.vrstaLeka = lekDTO.getVrstaLeka();
         this.sifraProizvodjacaUSaradnji = lekDTO.getSifraProizvodjacaUSaradnji();
         this.oblikSaradnje = lekDTO.getOblikSaradnje();
+        this.brojResenjaOStavljanjuLekaUPromet = lekDTO.getBrojResenjaOStavljanjuLekaUPromet();
+        this.nosilacDozvole = lekDTO.getNosilacDozvole();
     }
 }

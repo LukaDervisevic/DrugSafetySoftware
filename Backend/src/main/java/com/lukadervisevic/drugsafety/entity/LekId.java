@@ -15,7 +15,7 @@ import java.io.Serializable;
 public class LekId implements Serializable {
     // Zakljucio sam da je ovo dobitna kombinacija atributa za primarni kljuc, testirajuci povlacenja
     // objekata sa API-ja u bazu, tako da ova kombinacija vraca sve lekove kao jedinstvene
-    private String brojResenjaOStavljanjuLekaUPromet;
+
     @Column(length = 20)
     private String sifraProizvoda;
     @Column(length = 20)
@@ -30,6 +30,6 @@ public class LekId implements Serializable {
     private String ean;
     @Column(length = 20)
     private String jkl;
-    private String nosilacDozvole;
+
 
 }
