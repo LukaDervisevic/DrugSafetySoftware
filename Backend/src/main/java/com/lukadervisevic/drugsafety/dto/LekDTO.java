@@ -40,7 +40,7 @@ public class LekDTO {
     private String sifraProizvodjaca;
     private String sifraNosiocaDozvole;
 
-    public static Lek mapDTOToEntity(LekDTO dto) {
+    public static Lek toEntity(LekDTO dto) {
         Lek lek = new Lek();
         lek.setId(new LekId(
                 dto.getBrojResenjaOStavljanjuLekaUPromet(),

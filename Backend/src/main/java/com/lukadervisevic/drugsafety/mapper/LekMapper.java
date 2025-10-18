@@ -56,7 +56,7 @@ public class LekMapper {
         return lek;
     }
 
-    private static LekId getLekId(LekDTO dto) {
+    public LekId getLekId(LekDTO dto) {
         LekId id = new LekId();
         id.setBrojResenjaOStavljanjuLekaUPromet(dto.getBrojResenjaOStavljanjuLekaUPromet());
         id.setSifraProizvoda(dto.getSifraProizvoda());

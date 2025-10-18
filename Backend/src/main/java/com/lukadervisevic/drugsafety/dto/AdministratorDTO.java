@@ -3,6 +3,8 @@ package com.lukadervisevic.drugsafety.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+
+import java.util.LinkedList;
 import java.util.List;
 
 @Data
@@ -16,6 +18,6 @@ public class AdministratorDTO {
     @JsonProperty("aktivan")
     private boolean aktivan;
     private String token;
-    private List<PismoDTO> pisma;
+    private List<PismoDTO> pisma = new LinkedList<>();
 
 }

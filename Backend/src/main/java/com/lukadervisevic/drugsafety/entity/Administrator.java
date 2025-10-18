@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Component
@@ -23,16 +24,13 @@ public class Administrator {
     @Column(nullable = false)
     private String sifra;
 
-    @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
     private boolean aktivan;
 
-    @Column(nullable = false)
     private String token;
 
     @OneToMany(mappedBy = "administrator")
-    private List<Pismo> pisma;
+    private List<Pismo> pisma = new LinkedList<>();
 
 }

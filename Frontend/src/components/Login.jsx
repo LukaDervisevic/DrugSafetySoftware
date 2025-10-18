@@ -10,7 +10,7 @@ function Login() {
         if(username === "" || password === "") return alert("Molim vas popunite kredencijale")
 
         try{
-            const res = await fetch("http://localhost:8080/api/admin/login",
+            const res = await fetch("https://localhost:8443/api/admin/login",
                 {
                     method : "POST",
                     headers: {
@@ -26,6 +26,7 @@ function Login() {
             }
 
             const data = await res.json()
+            console.log(data)
             navigate("/")
 
         }catch(error) {
@@ -49,14 +50,14 @@ function Login() {
                 <div className=" w-[100%] flex flex-col items-center mt-[-40px]">
                     <div className="flex flex-col w-[70%]">
                         <span >Korisničko ime</span>
-                        <input type="text" className="login-input"/>
+                        <input type="text" className="login-input" onChange={(e) => setUsername(e.target.value)}/>
                     </div>
                     <div className="flex flex-col w-[70%] mt-[10px]">
                         <span >Šifra</span>
-                        <input type="password" className="login-input"/>
+                        <input type="password" className="login-input" onChange={(e) => setPassword(e.target.value)}/>
                     </div>
                     <div className="w-[70%] mt-[20px]">
-                        <button className="bordered-btn login-btn w-[100%]">Login</button>
+                        <button className="bordered-btn login-btn w-[100%]" onClick={handleLogin}>Login</button>
                     </div>
                 </div>
             </div>

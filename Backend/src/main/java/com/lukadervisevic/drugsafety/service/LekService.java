@@ -4,6 +4,7 @@ import com.lukadervisevic.drugsafety.dto.LekDTO;
 import com.lukadervisevic.drugsafety.dto.RegistarDTO;
 import com.lukadervisevic.drugsafety.entity.Lek;
 import com.lukadervisevic.drugsafety.entity.LekId;
+import com.lukadervisevic.drugsafety.mapper.LekMapper;
 import com.lukadervisevic.drugsafety.repository.LekRepository;
 import jakarta.transaction.Transactional;
 import lombok.Data;
@@ -27,6 +28,9 @@ public class LekService {
     private LekRepository repo;
 
     @Autowired
+    private LekMapper mapper;
+
+    @Autowired
     private RestTemplate restTemplate;
 
     public void fetchAndSave(){
@@ -34,33 +38,9 @@ public class LekService {
         Optional<RegistarDTO> registarDTO = Optional.ofNullable(restTemplate.getForObject(apiUrl, RegistarDTO.class));
         if(registarDTO.isEmpty() || registarDTO.get().getLekovi() == null) return;
 
-        List<Lek> lekovi = registarDTO.get().getLekovi().stream().map(dto -> {
-            Lek lek = new Lek();
-            lek.setId(new LekId(dto.getBrojResenjaOStavljanjuLekaUPromet(),
-                    dto.getSifraProizvoda(),
-                    dto.getSifraProizvodjaca(),
-                    dto.getSifraNosiocaDozvole(),
-                    dto.getVrstaResenja(),
-                    dto.getAtc(),
-                    dto.getEan(),
-                    dto.getJkl(),
-                    dto.getNosilacDozvole()));
-
-            lek.setNazivLeka(dto.getNazivLeka());
-            lek.setInn(dto.getInn());
-            lek.setRezimIzdavanjaLeka(dto.getRezimIzdavanjaLeka());
-            lek.setOblikIDozaLeka(dto.getOblikIDozaLeka());
-            lek.setDatumResenjaOStavljanjuLekaUPromet(dto.getDatumResenjaOStavljanjuLekaUPromet());
-            lek.setDatumVazenjaResenja(dto.getDatumVazenjaResenja());
-            lek.setProizvodjac(dto.getProizvodjac());
-            lek.setVrstaLeka(dto.getVrstaLeka());
-            lek.setSifraProizvodjacaUSaradnji(dto.getSifraProizvodjacaUSaradnji());
-            lek.setOblikSaradnje(dto.getOblikSaradnje());
-
-            return lek;
-        }).toList();
+        List<Lek> lekovi = registarDTO.get().getLekovi().stream()
+                .map(dto -> mapper.toEntity(dto)).toList();
         repo.saveAll(lekovi);
-
     }
 
     @Scheduled(cron = "0 10 2 * * *")
@@ -77,21 +57,11 @@ public class LekService {
                 .collect(Collectors.toMap(Lek::getId,lek -> lek));
 
         for (LekDTO lekAPI : lekoviAPI) {
-            LekId lekId = new LekId(
-                    lekAPI.getBrojResenjaOStavljanjuLekaUPromet(),
-                    lekAPI.getSifraProizvoda(),
-                    lekAPI.getSifraProizvodjaca(),
-                    lekAPI.getSifraNosiocaDozvole(),
-                    lekAPI.getVrstaResenja(),
-                    lekAPI.getAtc(),
-                    lekAPI.getEan(),
-                    lekAPI.getJkl(),
-                    lekAPI.getNosilacDozvole()
-            );
-
+            LekId lekId = mapper.getLekId(lekAPI);
             Lek lekDB = dbLekoviMap.get(lekId);
+
             if(lekDB == null) {
-                Lek mappedLek = LekDTO.mapDTOToEntity(lekAPI);
+                Lek mappedLek = LekDTO.toEntity(lekAPI);
                 repo.save(mappedLek);
                 log.info("New lek saved {}",mappedLek);
             }else if(!lekAPI.DTOequalsEntity(lekDB)) {
@@ -105,6 +75,11 @@ public class LekService {
 
     public List<LekDTO> getAllLekovi() {
         List<Lek> lekovi = repo.findAll();
-        return null;
+        return lekovi.stream().map(lek -> mapper.toDto(lek)).toList();
+    }
+
+    public List<LekDTO> findLekoviByNazivLekaStartingWith(String naziv) {
+        List<Lek> lekovi =  repo.findByNazivLekaStartingWith(naziv);
+        return lekovi.stream().map(lek -> mapper.toDto(lek)).toList();
     }
 }

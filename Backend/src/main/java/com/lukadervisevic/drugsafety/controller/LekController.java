@@ -4,9 +4,8 @@ import com.lukadervisevic.drugsafety.dto.LekDTO;
 import com.lukadervisevic.drugsafety.service.LekService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,8 +18,14 @@ public class LekController {
     @Autowired
     private final LekService service;
 
-    public List<LekDTO> getAllLekovi() {
-        return service.getAllLekovi();
+    @GetMapping
+    public ResponseEntity<?> getAllLekovi() {
+        return ResponseEntity.ok(service.getAllLekovi());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> getLekoviByName(@RequestParam("naziv") String naziv) {
+        return ResponseEntity.ok(service.findLekoviByNazivLekaStartingWith(naziv));
     }
 
 }

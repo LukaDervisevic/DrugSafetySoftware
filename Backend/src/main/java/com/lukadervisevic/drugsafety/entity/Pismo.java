@@ -38,6 +38,6 @@ public class Pismo {
     private Lek lek;
 
     @ManyToOne
-    @JoinColumn(name = "address_id", nullable = false)
+    @JoinColumn(name = "admin_id", nullable = false)
     private Administrator administrator;
 }
