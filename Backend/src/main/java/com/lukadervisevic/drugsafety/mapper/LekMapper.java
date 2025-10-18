@@ -1,15 +1,14 @@
 package com.lukadervisevic.drugsafety.mapper;
 
 import com.lukadervisevic.drugsafety.dto.LekDTO;
-import com.lukadervisevic.drugsafety.model.Lek;
-import com.lukadervisevic.drugsafety.model.LekId;
+import com.lukadervisevic.drugsafety.entity.Lek;
+import com.lukadervisevic.drugsafety.entity.LekId;
 import org.springframework.stereotype.Component;
 
 @Component
 public class LekMapper {
     public LekDTO toDto(Lek lek) {
         if (lek == null) return null;
-
         LekDTO dto = new LekDTO();
 
         dto.setBrojResenjaOStavljanjuLekaUPromet(lek.getId().getBrojResenjaOStavljanjuLekaUPromet());
@@ -57,7 +56,7 @@ public class LekMapper {
         return lek;
     }
 
-    private static LekId getLekId(LekDTO dto) {
+    public LekId getLekId(LekDTO dto) {
         LekId id = new LekId();
         id.setBrojResenjaOStavljanjuLekaUPromet(dto.getBrojResenjaOStavljanjuLekaUPromet());
         id.setSifraProizvoda(dto.getSifraProizvoda());

@@ -34,3 +34,4 @@ build/
 
 ### Config ###
 /Backend/src/main/resources/application.properties
+/Backend/src/main/resources/keystore.p12

@@ -1,4 +1,4 @@
-package com.lukadervisevic.drugsafety.model;
+package com.lukadervisevic.drugsafety.entity;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,11 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Entity
 @NoArgsConstructor
-@RequiredArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
+@Data
 public class Lek {
     @EmbeddedId
     @NonNull

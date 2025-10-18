@@ -1,4 +1,4 @@
-package com.lukadervisevic.drugsafety.model;
+package com.lukadervisevic.drugsafety.entity;
 
 import java.time.LocalDate;
 
@@ -36,4 +36,8 @@ public class Pismo {
             @JoinColumn(name = "vrsta_resenja",referencedColumnName = "vrstaResenja")
     })
     private Lek lek;
+
+    @ManyToOne
+    @JoinColumn(name = "admin_id", nullable = false)
+    private Administrator administrator;
 }

@@ -1,17 +1,22 @@
 package com.lukadervisevic.drugsafety.mapper;
 
 import com.lukadervisevic.drugsafety.dto.PismoDTO;
-import com.lukadervisevic.drugsafety.model.Lek;
-import com.lukadervisevic.drugsafety.model.Pismo;
+import com.lukadervisevic.drugsafety.entity.Lek;
+import com.lukadervisevic.drugsafety.entity.Pismo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Component
 @RequiredArgsConstructor
 public class PismoMapper {
     @Autowired
     private final LekMapper lekMapper;
+
+    private static final Path rootLocation = Paths.get("Backend","documents");
 
     public PismoDTO toDto(Pismo pismo) {
         if (pismo == null) return null;

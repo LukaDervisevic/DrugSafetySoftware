@@ -2,7 +2,6 @@ package com.lukadervisevic.drugsafety;
 
 import com.lukadervisevic.drugsafety.dto.LekDTO;
 import com.lukadervisevic.drugsafety.dto.RegistarDTO;
-import com.lukadervisevic.drugsafety.model.Lek;
 import com.lukadervisevic.drugsafety.repository.LekRepository;
 import com.lukadervisevic.drugsafety.service.LekService;
 import org.junit.jupiter.api.Test;
@@ -12,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 

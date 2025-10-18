@@ -1,15 +1,17 @@
 package com.lukadervisevic.drugsafety.dto;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.annotation.Nullable;
+import lombok.Data;
+import lombok.NonNull;
 
 import java.time.LocalDate;
-@Getter
-@Setter
+
+@Data
 public class PismoDTO {
     private int id;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate datum;
     private String naslovPisma;
     private String tekstPisma;
