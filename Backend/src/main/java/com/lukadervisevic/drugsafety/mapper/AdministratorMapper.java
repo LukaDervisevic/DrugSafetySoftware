@@ -24,7 +24,6 @@ public class AdministratorMapper {
         dto.setSifra(administrator.getSifra());
         dto.setEmail(administrator.getEmail());
         dto.setAktivan(administrator.isAktivan());
-        dto.setToken(administrator.getToken());
 
         List<PismoDTO> pisma = administrator.getPisma()
                 .stream().map(pismoMapper::toDto).toList();
@@ -39,7 +38,6 @@ public class AdministratorMapper {
         administrator.setEmail(dto.getEmail());
         administrator.setSifra(dto.getSifra());
         administrator.setAktivan(dto.isAktivan());
-        administrator.setToken(dto.getToken());
 
         List<Pismo> pisma = dto.getPisma()
                 .stream().map(pismoMapper::toEntity).toList();

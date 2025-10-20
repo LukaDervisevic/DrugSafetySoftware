@@ -7,16 +7,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 @Component
 @RequiredArgsConstructor
 public class PismoMapper {
     @Autowired
     private final LekMapper lekMapper;
-
-    private static final Path rootLocation = Paths.get("Backend","documents");
 
     public PismoDTO toDto(Pismo pismo) {
         if (pismo == null) return null;
@@ -28,8 +23,8 @@ public class PismoMapper {
         dto.setTekstPisma(pismo.getTekstPisma());
         dto.setDokumentUrl(pismo.getDokumentUrl());
 
-        if (pismo.getLek() != null) {
-            dto.setLekDto(lekMapper.toDto(pismo.getLek()));
+        if (pismo.getLekovi() != null ) {
+            dto.setLekovi(pismo.getLekovi().stream().map(lekMapper::toDto).toList());
         }
 
         return dto;
@@ -45,9 +40,8 @@ public class PismoMapper {
         pismo.setTekstPisma(dto.getTekstPisma());
         pismo.setDokumentUrl(dto.getDokumentUrl());
 
-        if (dto.getLekDto() != null) {
-            Lek lek = lekMapper.toEntity(dto.getLekDto());
-            pismo.setLek(lek);
+        if (dto.getLekovi() != null) {
+            pismo.setLekovi(dto.getLekovi().stream().map(lekMapper::toEntity).toList());
         }
 
         return pismo;

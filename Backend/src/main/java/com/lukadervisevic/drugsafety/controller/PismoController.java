@@ -2,6 +2,7 @@ package com.lukadervisevic.drugsafety.controller;
 
 import com.lukadervisevic.drugsafety.dto.PismoDTO;
 import com.lukadervisevic.drugsafety.service.PismoService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -23,9 +24,9 @@ public class PismoController {
     @Autowired
     private final PismoService service;
 
-    @PostMapping
-    public ResponseEntity<?> createPismo(@RequestPart("pismo") PismoDTO dto,
-                                         @RequestPart("pdf") MultipartFile pdf) {
+    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> createPismoMultiPart(@RequestPart("pismo") PismoDTO dto,
+                                                  @RequestPart(value = "pdf", required = false) MultipartFile pdf, HttpServletRequest request) {
         try{
             PismoDTO pismoDTO = service.createPismo(dto, pdf);
             return ResponseEntity.ok(pismoDTO);
@@ -36,15 +37,49 @@ public class PismoController {
         }
     }
 
+    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<?> createPismoJSON(@RequestBody PismoDTO dto) {
+        try {
+            PismoDTO pismoDTO = service.createPismo(dto,null);
+            return ResponseEntity.ok(pismoDTO);
+        }catch(Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(Map.of("error", "Greska pri kreiranju pisma"));
+        }
+    }
+
+    @PutMapping(value = "/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> updatePismo(@PathVariable int id,
+                                         @RequestPart("pismo") PismoDTO dto,
+                                         @RequestPart(value = "pdf", required = false) MultipartFile pdf){
+        try{
+            PismoDTO updatedPismo = service.updatePismo(id,dto,pdf);
+            return ResponseEntity.ok(updatedPismo);
+        }catch (IOException ex) {
+            ex.printStackTrace();
+            return ResponseEntity.status(500).body(Map.of("error", "Greska azuiranju dokumenta"));
+        }catch(Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity.status(500).body(Map.of("error","Greska pri azuriranju pisma"));
+        }
+
+    }
+
     @GetMapping
-    public ResponseEntity<?> getPisma() {
+    public ResponseEntity<?> getPisma(@RequestParam(name = "naziv", required = false) String naziv) {
+        if(naziv != null && !naziv.isEmpty()) {
+            return ResponseEntity.ok(service.getPismaByLekName(naziv));
+        }
         return ResponseEntity.ok(service.getPisma());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PismoDTO> getPismo(@PathVariable Integer id) {
+    public ResponseEntity<?> getPismo(@PathVariable Integer id) {
         PismoDTO pismoDTO = service.getPismo(id);
-        return ResponseEntity.ok(pismoDTO);
+        if(pismoDTO != null) {
+            return ResponseEntity.ok(pismoDTO);
+        }
+        else return ResponseEntity.status(404).body(Map.of("error","Nepostojece pismo"));
     }
 
     @DeleteMapping("/{id}")
@@ -62,7 +97,7 @@ public class PismoController {
     @GetMapping("/{id}/pdf")
     public ResponseEntity<?> getPdf(@PathVariable Integer id) {
         try {
-            Resource resource = service.loadPdf(id);
+            Resource resource = service.loadDocument(id);
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_PDF)
                     .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")

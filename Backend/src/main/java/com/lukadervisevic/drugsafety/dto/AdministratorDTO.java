@@ -9,15 +9,10 @@ import java.util.List;
 
 @Data
 public class AdministratorDTO {
-    @JsonProperty("korisnickoIme")
     private String korisnickoIme;
-    @JsonProperty("email")
     private String email;
-    @JsonProperty("sifra")
     private String sifra;
-    @JsonProperty("aktivan")
     private boolean aktivan;
-    private String token;
     private List<PismoDTO> pisma = new LinkedList<>();
 
 }

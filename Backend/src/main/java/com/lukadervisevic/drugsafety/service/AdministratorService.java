@@ -50,6 +50,7 @@ public class AdministratorService {
             throw new UserAlreadyExistsException("Administrator vec postoji sa korisnickim imenom");
         }
 
+        admin.setAktivan(true);
         admin.setSifra(passwordEncoder.encode(dto.getSifra()));
         return mapper.toDTO(repo.save(admin));
     }

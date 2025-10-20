@@ -60,7 +60,7 @@ public class Lek {
     @NonNull
     private String brojResenjaOStavljanjuLekaUPromet;
 
-    @OneToMany(mappedBy = "lek",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "lekovi", fetch = FetchType.LAZY)
     private List<Pismo> pisma = new ArrayList<>();
 
     public void sync(LekDTO lekDTO) {

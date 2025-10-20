@@ -1,6 +1,7 @@
 package com.lukadervisevic.drugsafety.entity;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,24 +19,28 @@ public class Pismo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private LocalDate datum;
+    @Column(columnDefinition = "TEXT")
     private String naslovPisma;
+    @Column(columnDefinition = "TEXT")
     private String tekstPisma;
     private String dokumentUrl;
     private boolean deleted;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumns({
-            @JoinColumn(name = "atc",referencedColumnName = "atc"),
-            @JoinColumn(name = "broj_resenjaostavljanju_lekaupromet", referencedColumnName = "brojResenjaOStavljanjuLekaUPromet"),
-            @JoinColumn(name = "ean",referencedColumnName = "ean"),
-            @JoinColumn(name = "jkl",referencedColumnName = "jkl"),
-            @JoinColumn(name = "nosilac_dozvole",referencedColumnName = "nosilacDozvole"),
-            @JoinColumn(name =  "sifra_nosioca_dozvole",referencedColumnName = "sifraNosiocaDozvole"),
-            @JoinColumn(name = "sifra_proizvoda",referencedColumnName = "sifraProizvoda"),
-            @JoinColumn(name = "sifra_proizvodjaca",referencedColumnName = "sifraProizvodjaca"),
-            @JoinColumn(name = "vrsta_resenja",referencedColumnName = "vrstaResenja")
-    })
-    private Lek lek;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "lek_pismo",
+            joinColumns = @JoinColumn(name = "pismo_id"),
+            inverseJoinColumns = {
+                    @JoinColumn(name = "atc",referencedColumnName = "atc"),
+                    @JoinColumn(name = "ean",referencedColumnName = "ean"),
+                    @JoinColumn(name = "jkl",referencedColumnName = "jkl"),
+                    @JoinColumn(name =  "sifra_nosioca_dozvole",referencedColumnName = "sifraNosiocaDozvole"),
+                    @JoinColumn(name = "sifra_proizvoda",referencedColumnName = "sifraProizvoda"),
+                    @JoinColumn(name = "sifra_proizvodjaca",referencedColumnName = "sifraProizvodjaca"),
+                    @JoinColumn(name = "vrsta_resenja",referencedColumnName = "vrstaResenja")
+            }
+    )
+    private List<Lek> lekovi;
 
     @ManyToOne
     @JoinColumn(name = "admin_id", nullable = false)
