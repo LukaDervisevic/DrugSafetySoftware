@@ -67,9 +67,8 @@ public class LekDTO {
 
     public boolean DTOequalsEntity(Lek lek) {
         if (lek == null) return false;
-        // Jedino je izostavljen brojResenjaOStavljanjUPromet jer on nije bitan za kontekst
-        // kreiranja pisama za data resenja, u bazi postoji vise lekova koji imaju razlicite brojeveResenja
-        // iako oba vaze
+        // Jedino je izostavljen u poredjenju brojResenjaOStavljanjUPromet jer on nije bitan za kontekst zadatka
+        // kreiranja pisama, u bazi postoji vise lekova koji imaju razlicite brojeveResenja iako im oba resenja vaze
         return
                 Objects.equals(this.sifraProizvodjaca, lek.getId().getSifraProizvodjaca()) &&
                         Objects.equals(this.sifraNosiocaDozvole, lek.getId().getSifraNosiocaDozvole()) &&

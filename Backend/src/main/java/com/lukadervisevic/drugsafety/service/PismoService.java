@@ -50,28 +50,31 @@ public class PismoService {
     private final Path rootLocation = Paths.get("Backend","documents");
 
     public PismoDTO createPismo(PismoDTO dto, @Nullable  MultipartFile pdf) throws IOException {
+        // Mapiranje PismoDTO u Pismo
         Pismo pismo = mapper.toEntity(dto);
-
+        // uzimanje korisnickog imena administratora i vracanje Administratora iz baze u koliko postoji
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Administrator admin = adminRepo.findByKorisnickoIme(username)
                 .orElseThrow(() -> new RuntimeException("Administrator nije pronadjen"));
+        // Postavljanje administratora u pismu
         pismo.setAdministrator(admin);
 
+        // Kreiranje liste svih id-jeva lekova pisma
         List<LekId> lekIds = pismo.getLekovi()
                 .stream().map(Lek::getId).toList();
-
+        // Vracanje lekova iz baze po listi id-jeva
         List<Lek> lekoviDB = lekRepo.findAllById(lekIds);
-
+        // Uzimanje id-jeva lekova iz baze i kreiranje skupa za poredjenje
         Set<LekId> lekoviDbIds = lekoviDB.stream()
                 .map(Lek::getId)
                 .collect(Collectors.toSet());
-
+        // Poredjenje lista id-jeva
         for (Lek lek : pismo.getLekovi()) {
             if (!lekoviDbIds.contains(lek.getId())) {
                 throw new EntityNotFoundException("Lek " + lek.getNazivLeka() + " nije pronadjen u bazi");
             }
         }
-
+        // Generisanje pdf dokumenta u serverskom folderu documents
         if( pdf != null &&  !pdf.isEmpty()) {
             String filename = generateDocumentName(dto,pdf);
             Path targetPath = rootLocation.resolve(filename);
@@ -79,8 +82,9 @@ public class PismoService {
             Files.copy(pdf.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
             pismo.setDokumentUrl(filename);
         }
-
+        // Kreiranje pisma
         Pismo createdPismo = repo.save(pismo);
+        // Vracanje mapiranog dto-a
         return mapper.toDto(createdPismo);
     }
 
@@ -95,86 +99,86 @@ public class PismoService {
     }
 
     public List<PismoDTO> getPismaByLekName(String lekName) {
-        try{
-            return repo.findByLek_NazivLekaStartingWithIgnoreCase(lekName)
+            // Vracanje pisama koja imaju atribut deleted false po nazivu leka i mapiranje u listu dto-ova
+            return repo.findByDeletedFalseAndLek_NazivLekaStartingWithIgnoreCase(lekName)
                     .stream()
                     .map(pismo -> mapper.toDto(pismo))
                     .toList();
-        }catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-
-
     }
 
     public PismoDTO updatePismo(Integer id, PismoDTO dto, MultipartFile pdf) throws IOException {
+        // Mapiranje PismoDTO u Pismo
         Pismo pismo = mapper.toEntity(dto);
 
         Pismo oldPismo = repo.findById(id).orElseThrow(() -> new EntityNotFoundException("Pismo ne postoji sa zadatim id-jem"));
-
+        // Kreiranje liste svih id-jeva lekova pisma
         List<LekId> lekIds = pismo.getLekovi()
                 .stream().map(Lek::getId).toList();
-
+        // Vracanje lekova iz baze po listi id-jeva
         List<Lek> lekoviDB = lekRepo.findAllById(lekIds);
 
+    // Uzimanje id-jeva lekova iz baze i kreiranje skupa za poredjenje
         Set<LekId> lekoviDbIds = lekoviDB.stream()
                 .map(Lek::getId)
                 .collect(Collectors.toSet());
-
+        // Poredjenje lista id-jeva
         for (Lek lek : pismo.getLekovi()) {
             if (!lekoviDbIds.contains(lek.getId())) {
                 throw new EntityNotFoundException("Lek " + lek.getNazivLeka() + " nije pronadjen u bazi");
             }
         }
 
+        // uzimanje korisnickog imena administratora i vracanje Administratora iz baze u koliko postoji
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Administrator admin = adminRepo.findByKorisnickoIme(username)
                 .orElseThrow(() -> new RuntimeException("Administrator nije pronadjen"));
+        // Postavljanje administratora u pismu
         pismo.setAdministrator(admin);
 
+        // Generisanje pdf dokumenta u serverskom folderu documents
         if (pdf != null && !pdf.isEmpty()) {
-
+            // Brisanje vec postojeceg fajla
             if(oldPismo.getDokumentUrl() != null && !oldPismo.getDokumentUrl().isEmpty()) {
                 Path oldPath = rootLocation.resolve(oldPismo.getDokumentUrl());
                 Files.deleteIfExists(oldPath);
             }
-
+            // Generisanje pdf dokumenta u serverskom folderu documents i postavljanje u pismu
             String filename = generateDocumentName(dto,pdf);
             Path targetPath = rootLocation.resolve(filename);
             Files.createDirectories(rootLocation);
             Files.copy(pdf.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
             pismo.setDokumentUrl(filename);
         }
-
+        // Vracanje mapiranog dto-a azuriranog pisma
         return mapper.toDto(repo.save(pismo));
     }
 
     public void deletePismo(Integer id) {
+        // Pronalazenje pisma po id-ju ukoliko ga nema baca se greska
         Pismo pismo = repo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Pismo ne postoji zadatim id-jem"));
+        // Azuriranje atributa deleted na true, ne izvrsava se stvarno brisanje iz baze
         pismo.setDeleted(true);
-//        try {
-//            Path file = rootLocation.resolve(pismo.getDokumentUrl());
-//            Files.deleteIfExists(file);
-//        } catch (IOException e) {
-//            System.err.println("Neuspešno brisanje fajla: " + e.getMessage());
-//        }
-
+        // Azuriranje pisma
         repo.save(pismo);
     }
 
     public Resource loadDocument(Integer id) {
+        // Ukoliko ne postoji pismo sa zadatim id-jem vrati gresku
         Pismo pismo = repo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Nije pronadjeno pismo sa zadatim id-jem"));
 
+        // Nalazenje putanje do fajla na osnovu url-a dokumenta
         Path file = rootLocation.resolve(pismo.getDokumentUrl()).normalize();
 
         try {
+            // Kreiranje resursa na osnovu putanje
             Resource resource = new UrlResource(file.toUri());
+            // Provera validnosti resursa
             if (!resource.exists() || !resource.isReadable()) {
                 throw new RuntimeException("Fajl ne moze da se procita: " + pismo.getDokumentUrl());
             }
+            // Vracanje resursa
             return resource;
         } catch (Exception e) {
             throw new RuntimeException("Neuspesno ucitavanje fajla", e);

@@ -12,6 +12,6 @@ import java.util.List;
 public interface PismoRepository extends JpaRepository<Pismo,Integer> {
     List<Pismo> findByDeletedFalse();
 
-    @Query("SELECT p FROM Pismo p JOIN p.lekovi l WHERE LOWER(l.nazivLeka) LIKE LOWER(CONCAT(:nazivLeka, '%'))")
-    List<Pismo> findByLek_NazivLekaStartingWithIgnoreCase(@Param("nazivLeka") String nazivLeka);
+    @Query("SELECT p FROM Pismo p JOIN p.lekovi l WHERE p.deleted = false AND LOWER(l.nazivLeka) LIKE LOWER(CONCAT(:nazivLeka, '%'))")
+    List<Pismo> findByDeletedFalseAndLek_NazivLekaStartingWithIgnoreCase(@Param("nazivLeka") String lekName);
 }

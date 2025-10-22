@@ -45,22 +45,28 @@ public class AdministratorService {
     private JWTService jwtService;
 
     public AdministratorDTO registerAdministrator(AdministratorDTO dto) {
+        // Mapiranje objekta AdministratorDTO u AdminDTO
         Administrator admin = mapper.toEntity(dto);
+        // Provera da li vec postoji administrator za korisnickim imenom
         if (repo.findByKorisnickoIme(admin.getKorisnickoIme()).isPresent()) {
             throw new UserAlreadyExistsException("Administrator vec postoji sa korisnickim imenom");
         }
-
+        // Postavljanje atributa aktivan na true
         admin.setAktivan(true);
+        // Hesiranje sifre
         admin.setSifra(passwordEncoder.encode(dto.getSifra()));
+        // Vracanje mapiranog DTO objekta
         return mapper.toDTO(repo.save(admin));
     }
 
     public String login(AuthCredencials credencials) {
+        //Kreiranje UsernamePasswordAuthenticationToken sa kredencijalima i prosledjivanje AuthenticationManager-u
             Authentication authentication = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(credencials.getKorisnickoIme(), credencials.getSifra()));
+            // AdministratorPrincipal implementira UserDetails
             AdministratorPrincipal admin = (AdministratorPrincipal) adminUserDetailsService
                     .loadUserByUsername(credencials.getKorisnickoIme());
-
+            // Vracanje tokena koji je generisan JWT servisom na osnovu userDetails-a
             return jwtService.generateToken(admin);
     }
 

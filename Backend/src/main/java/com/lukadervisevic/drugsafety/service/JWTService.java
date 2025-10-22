@@ -32,11 +32,16 @@ public class JWTService<T> {
 
     public String generateToken(AdministratorPrincipal admin) {
         Map<String, Object> claims = new HashMap<>();
+        // Inicijalizuje mapu za dodatne informacije (claims) u tokenu
         return Jwts.builder()
                 .setClaims(claims)
+                // Postavljanje imena administratora kao subject tokena
                 .setSubject(admin.getUsername())
+                // Postavljanje datuma izdavanja
                 .setIssuedAt(new Date(System.currentTimeMillis()))
+                // Postavljanje datuma isteka, konkretno 1 dan trajanja
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                // Potpisivanje tokena tajnim kljucem i HS256 algoritmom
                 .signWith(getKey(), SignatureAlgorithm.HS256).compact();
     }
 

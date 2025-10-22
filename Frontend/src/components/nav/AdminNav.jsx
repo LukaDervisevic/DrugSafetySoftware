@@ -11,9 +11,14 @@ function AdminNav() {
   };
 
   const handleLogout = () => {
+    // Prikazuje poruku potvrde odjavljivanja
     const confirmWindow = window.confirm("Da li sigurno zelite da se odjavite");
     if (!confirmWindow) return;
+    // Poziva logout metodu prosledjenu od strane AdminContexta koja azurira State
+    // isLoggedIn,korisnickoIme i brise imeKorisnika i token iz lokalnog skladista
     logout();
+    // Prikaz poruke uspesnog odjavljivanja
+    alert("Uspesno odjavljivanje");
   };
 
   return (
@@ -24,6 +29,7 @@ function AdminNav() {
       >
         Objavi pismo
       </button>
+      {/* Na dugmetu je postavljen event listener onClick koji poziva handleLogout handler funckiju */}
       <button
         className="bordered-btn  pt-[10px] pb-[10px] pr-[20px] pl-[20px] nunito"
         onClick={handleLogout}

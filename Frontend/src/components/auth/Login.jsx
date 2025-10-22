@@ -9,29 +9,36 @@ function Login() {
   const { login } = useContext(AdminContext);
 
   const handleLogin = async () => {
+    // Provera formata kredencijala
     if (username === "" || password === "")
       return alert("Molim vas popunite kredencijale");
 
     try {
+      // Kreiranje POST zahteva koji šalje JSON u telu
       const res = await fetch("https://localhost:8443/api/admin/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        // serijalizacija objekta u JSON
         body: JSON.stringify({ korisnickoIme: username, sifra: password }),
       });
 
+      // Ukoliko status odgovora nije 200 baci gresku
       if (!res.ok) {
         const error = await res.json();
-        return alert(error.message);
+        throw new Error(error);
       }
-
+      // Vracanje podataka iz odgovora
       const data = await res.json();
+      // Azuriranje AdminContext provider-a sa korisnickim imenom i vracenim tokenom
       login(username, data.token);
+      alert("Uspesna prijava");
 
+      // navigacija nazad na pocetnu stranicu
       navigate("/");
     } catch (error) {
-      console.log("Login error: ", error);
+      //Obrada neuspelog prijavljivanja
       alert("Neuspesno prijavljivanje");
     }
   };
@@ -58,6 +65,8 @@ function Login() {
       <div className=" w-[100%] flex flex-col items-center mt-[-40px]">
         <div className="flex flex-col w-[70%]">
           <span>Korisničko ime</span>
+          {/* Na input polju za korisnicko ime event listener onChange, koji ažurira state UserName
+          pri promeni teksta */}
           <input
             type="text"
             className="input-field"
@@ -66,6 +75,8 @@ function Login() {
         </div>
         <div className="flex flex-col w-[70%] mt-[10px]">
           <span>Šifra</span>
+          {/* Na input polju za korisnicko ime event listener onChange, koji ažurira state Password
+          pri promeni teksta */}
           <input
             type="password"
             className="input-field"
@@ -81,6 +92,7 @@ function Login() {
           </button>
         </div>
         <div className="w-[70%] mt-[20px]">
+          {/* Na dugmetu je postavljen event listener onClick koji poziva handleLogin handler funckiju */}
           <button
             className="bordered-btn login-btn w-[100%]"
             onClick={handleLogin}

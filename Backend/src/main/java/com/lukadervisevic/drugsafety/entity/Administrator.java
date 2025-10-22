@@ -28,8 +28,6 @@ public class Administrator {
 
     private boolean aktivan;
 
-    private String token;
-
     @OneToMany(mappedBy = "administrator")
     private List<Pismo> pisma = new LinkedList<>();
 

@@ -15,6 +15,8 @@ function PostManipulation({ operation }) {
   const [loading, setLoading] = useState(true);
   const [pdf, setPdf] = useState(null);
 
+  // UseEffect azurira state-ove Title, Text i SelectedLekovi,
+  // nakon promene state-a Pismo
   useEffect(() => {
     if (pismo) {
       setTitle(pismo.naslovPisma || "");
@@ -23,6 +25,8 @@ function PostManipulation({ operation }) {
     }
   }, [pismo]);
 
+  // UseEffect koji ukoliko je operacija azuriranje salje GET zahtev
+  // za pismo sa datim idjem
   useEffect(() => {
     if (!pismo && operation === "update") {
       fetch(`https://localhost:8443/api/pisma/${id}`)
@@ -45,25 +49,27 @@ function PostManipulation({ operation }) {
   }
 
   const handleLekSearch = async () => {
-    try {
-      const res = await fetch(
-        `https://localhost:8443/api/lekovi/search?naziv=${encodeURIComponent(
-          nazivLeka
-        )}`,
-        {
-          method: "GET",
-        }
-      );
-      if (!res.ok) {
-        throw new Error("Greska pri vracanju lekova po nazivu");
+    // Kreiranje GET zahteva sa parametrom naziv
+    const res = await fetch(
+      `https://localhost:8443/api/lekovi/search?naziv=${encodeURIComponent(
+        nazivLeka
+      )}`,
+      {
+        method: "GET",
       }
-      const data = await res.json();
-      setLekovi(data);
-    } catch (error) {
-      console.error(error);
+    );
+    // Ukoliko status odgovora nije 200 prikazi gresku
+    if (!res.ok) {
+      const error = await res.json();
+      alert(error.message);
     }
+    // Ukoliko je status odgovora 200 vrati lekove
+    const data = await res.json();
+    setLekovi(data);
   };
 
+  // Handler funckija koja postavlja state Selected Lekovi
+  // na promenjeni niz lekova koji se dobija filtriranjem
   const handleLekRemoval = (lekToRemove) => {
     setSelectedLekovi(
       selectedLekovi.filter((lek) => !isSameId(lekToRemove, lek))
@@ -71,48 +77,56 @@ function PostManipulation({ operation }) {
   };
 
   const handlePismoCreation = async () => {
+    // Kreiranje objekta pismo na osnovu state-ova
+    //  Title, Text, SelectedLekovi
+    if (title === "" || text === "" || lekovi.length === 0) {
+      return;
+    }
+
     const pismo = {
       naslovPisma: title,
       tekstPisma: text,
       lekovi: selectedLekovi,
       datum: new Date().toLocaleDateString("en-CA"),
     };
-    console.log(pismo);
-
-    try {
-      const formData = new FormData();
-      const jsonBlob = new Blob([JSON.stringify(pismo)], {
-        type: "application/json",
-      });
-      formData.append("pismo", jsonBlob);
-      if (pdf) {
-        formData.append("pdf", pdf);
-      }
-
-      const res = await fetch("https://localhost:8443/api/pisma", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
-        },
-        body: formData,
-      });
-      if (!res.ok) {
-        const err = await res.json();
-        console.error(err);
-        return;
-      }
-      await res.json();
-      alert("Pismo je kreirano");
-      setSelectedLekovi([]);
-      setPdf(null);
-      setText("");
-      setTitle("");
-    } catch (error) {
-      console.error(error);
+    // Kreiranje form data objekta za slanje
+    const formData = new FormData();
+    // Kreiranje Blob-a na osnovu serijalizovanog objekta pismo
+    const jsonBlob = new Blob([JSON.stringify(pismo)], {
+      type: "application/json",
+    });
+    // Dodavanje Blob-a form data objektu
+    formData.append("pismo", jsonBlob);
+    if (pdf) {
+      // Dodavanje pdf-a form data objektu
+      formData.append("pdf", pdf);
     }
+    // Kreiranje POST zahteva za kreiranje pisma sa JWT tokenom za autorizaciju
+    // Post zahtev je tipa form-data
+    const res = await fetch("https://localhost:8443/api/pisma", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+      },
+      body: formData,
+    });
+    // Ukoliko status odgovora nije 200 prikazi gresku
+    if (!res.ok) {
+      const error = await res.json();
+      alert(error.message);
+      return;
+    }
+    // U suprotnom prikazi poruku Pismo je kreirano i podesi state-ove na prazne vrednosti
+    await res.json();
+    alert("Pismo je kreirano");
+    setSelectedLekovi([]);
+    setPdf(null);
+    setText("");
+    setTitle("");
   };
 
   const handlePismoUpdate = async () => {
+    // Kreiranje objekta na onsovu state-ova
     const pismoToUpdate = {
       id: pismo.id,
       naslovPisma: title,
@@ -120,45 +134,52 @@ function PostManipulation({ operation }) {
       lekovi: selectedLekovi,
       datum: pismo.datum,
     };
-
-    try {
-      const formData = new FormData();
-      const jsonBlob = new Blob([JSON.stringify(pismoToUpdate)], {
-        type: "application/json",
-      });
-      formData.append("pismo", jsonBlob);
-      if (pdf) {
-        formData.append("pdf", pdf);
-      }
-
-      const res = await fetch(
-        `https://localhost:8443/api/pisma/${pismoToUpdate.id}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
-          },
-          body: formData,
-        }
-      );
-      if (!res.ok) {
-        throw new Error("Greska pri azuriranju pisma");
-      }
-      const data = await res.json();
-      console.log(data);
-      setPismo(data);
-      alert("Pismo je uspesno azurirano");
-    } catch (error) {
-      console.error(error);
+    // kreiranje form data objekta
+    const formData = new FormData();
+    // Kreiranje Blob-a na osnovu serijalizovanog pisma
+    const jsonBlob = new Blob([JSON.stringify(pismoToUpdate)], {
+      type: "application/json",
+    });
+    // Dodavanje Blob-a u form data
+    formData.append("pismo", jsonBlob);
+    // Dodavanje pdf dokumenta u form data
+    if (pdf) {
+      formData.append("pdf", pdf);
     }
+    // Kreiranje PUT zahteva tipa form data sa JWT tokenom u zaglavlju
+    const res = await fetch(
+      `https://localhost:8443/api/pisma/${pismoToUpdate.id}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+        },
+        body: formData,
+      }
+    );
+    // Ukoliko status odgovora nije 200 prikazi gresku
+    if (!res.ok) {
+      const error = await res.json();
+      alert(error.message);
+      return;
+    }
+    // Ukoliko je status odgovora 200 onda postavi state Pismo
+    // i prikazi uspesnu poruku
+    const data = await res.json();
+    setPismo(data);
+    alert("Pismo je uspesno azurirano");
   };
 
   const handlePdfUpload = (event) => {
+    // Preuzimanje pdf-a iz input field-a
     const pdf = event.target.files[0];
+    // Postavljanje state-a Pdf na pdf
     setPdf(pdf);
   };
 
   useEffect(() => {
+    // Pri iniciajlnom renderovanju komponente za kreiranje pisma,
+    // useEffect kreira GET zahtev za vracanje lekova
     const fetchLekovi = async () => {
       try {
         const res = await fetch("https://localhost:8443/api/lekovi", {
@@ -169,10 +190,12 @@ function PostManipulation({ operation }) {
         });
         if (!res.ok) throw new Error("Greska pri ucitavanju lekova");
         const data = await res.json();
+        // postavljanje state-a Lekovi na data
         setLekovi(data);
       } catch (error) {
-        console.error("Greska pri vracanju lekova: ", error);
+        alert("Greska pri vracanju lekova");
       } finally {
+        // postavljanje state-a Loading na false, zavrseno ucitavanje
         setLoading(false);
       }
     };
@@ -191,6 +214,8 @@ function PostManipulation({ operation }) {
             className="flex flex-col ml-[30px] mt-[30px]"
           >
             <span className="mb-[5px]">Naslov pisma</span>
+            {/* Na input polju za naziv pisma postavljen je event listener onChange,
+         koji ažurira state Title pri promeni teksta */}
             <input
               type="text"
               className="input-field mb-[20px]"
@@ -198,6 +223,8 @@ function PostManipulation({ operation }) {
               onChange={(e) => setTitle(e.target.value)}
             />
             <span className="mb-[5px]">Sadrzaj pisma</span>
+            {/* Na textarea polju za tekst pisma postavljen je event listener onChange,
+         koji ažurira state Text pri promeni teksta */}
             <textarea
               className="input-field mb-[20px]"
               rows={10}
@@ -208,6 +235,8 @@ function PostManipulation({ operation }) {
             ></textarea>
             <div className="flex flex-row items-center">
               <span className="mr-[20px]">Dokument</span>
+              {/* Na textarea polju za pdf dokument postavljen je event listener onChange,
+         koji ažurira state Pdf pri promeni dokumenta */}
               <input
                 type="file"
                 accept="application/pdf"
@@ -216,6 +245,8 @@ function PostManipulation({ operation }) {
             </div>
           </form>
           <div className="flex flex-row items-center justify-start ml-[30px] mt-[10px]">
+            {/* Na dugmetu je postavljen event listener onClick koji poziva handlePismoCreation 
+            ukoliko je u pitanju kreiranje ili handlePismoUpdate ako je u pitanju azuriranje*/}
             <button
               className="bordered-btn bg-[#009fac] text-[#f8fbfc] nunito create-post-btn"
               onClick={
@@ -245,12 +276,15 @@ function PostManipulation({ operation }) {
         <div className="ml-[30px] flex-1 mt-[65px] flex flex-col">
           <div className=" mb-[20px]">
             <div className="flex flex-row w-[40%]">
+              {/* Na input polju za naziv Leka je event listener onChange,
+              koji ažurira state NazivLeka pri promeni teksta */}
               <input
                 type="text"
                 placeholder="naziv leka"
                 className="bordered table-search-input flex-1 mr-[10px]"
                 onChange={(e) => setNazivLeka(e.target.value)}
               />
+              {/* Na dugmetu je postavljen event listener onClick koji poziva handleLekSearch handler funckiju */}
               <button
                 className="bordered-btn nunito search-btn bg-[#009fac] text-[#f8fbfc]"
                 onClick={handleLekSearch}

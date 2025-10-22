@@ -21,8 +21,10 @@ public class AdministratorController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthCredencials authCredencials) {
         try {
+            // Vracanje odgovora sa telom {token: "..."}, ukoliko ne dodje do greske
             return ResponseEntity.ok(Map.of("token",service.login(authCredencials)));
         } catch (Exception e) {
+            // Obrada neuspele prijave, vracanje statusa 401 sa greskom kao porukom
             return ResponseEntity.status(401).body(Map.of("message", e.getMessage()));
         }
     }
@@ -30,9 +32,11 @@ public class AdministratorController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody AdministratorDTO adminDto) {
         try {
+            // Ukoliko je registracija uspesna vrati podatke
             AdministratorDTO registeredAdmin = service.registerAdministrator(adminDto);
             return ResponseEntity.ok(registeredAdmin);
         } catch (UserAlreadyExistsException e) {
+            // Ukoliko administrator vec postoji vrati odgovor sa statusom 409 i porukom
             return ResponseEntity.status(409).body(Map.of("message", e.getMessage()));
         }
     }

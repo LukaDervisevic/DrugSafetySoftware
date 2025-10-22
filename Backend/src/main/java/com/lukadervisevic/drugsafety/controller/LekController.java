@@ -20,11 +20,13 @@ public class LekController {
 
     @GetMapping
     public ResponseEntity<?> getAllLekovi() {
+        // Vracanje lekova sa statusom 200
         return ResponseEntity.ok(service.getAllLekovi());
     }
 
     @GetMapping("/search")
     public ResponseEntity<?> getLekoviByName(@RequestParam("naziv") String naziv) {
+        // Vracanje pretrazenih lekova po nazivu sa statusom 200
         return ResponseEntity.ok(service.findLekoviByNazivLekaStartingWith(naziv));
     }
 

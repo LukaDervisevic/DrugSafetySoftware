@@ -19,6 +19,8 @@ export function AdminProvider({ children }) {
     console.log(localStorage.getItem("jwtToken"));
     localStorage.setItem("korisnickoIme", ime);
   };
+  // Funckija AdminContexta koja azurira state isLoggedIn, korisnickoIme
+  // i brise token i korisnicko ime iz lokalnog skladista
   const logout = () => {
     setIsLoggedIn(false);
     setKorisnickoIme("");
